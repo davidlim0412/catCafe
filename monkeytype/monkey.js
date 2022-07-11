@@ -35,6 +35,7 @@ async function fetchLibrary() {
     })
     return wordlistasync
 }
+
 async function doWork() {
     wordlist = await fetchLibrary();
     await document.addEventListener('keydown', logKey);
@@ -47,43 +48,44 @@ function logKey(e) {
     if (end) {
         return
     }
-    var currentWordlistInd = typed.length
-    var currentLetterInd = currentWord.length
-    const words = Array.from(textbox.children);
-    const letters = Array.from(words[currentWordlistInd+1].children);
+    var currentWordlistInd = typed.length //the index in the wordlist which points to the current word
+    var currentLetterInd = currentWord.length //the index in the wordlist which points to the letter which is being typed in the current word
+    const words = Array.from(textbox.children); //pointer to all words(divs) in the textbox
+    const letters = Array.from(words[currentWordlistInd+1].children); //pointer to all the letters(letters) in the textbox
     if (e.key === "Backspace") {
-        if (currentWord.length) {
-            currentWord.pop();
-            caretPos -= 14.41;
-            if (currentLetterInd > wordlist[currentWordlistInd].length) {
-                words[currentWordlistInd+1].removeChild(words[currentWordlistInd+1].lastChild);
+        if (currentLetterInd) { // if there is currently something being typed
+            currentWord.pop(); //remove the latest letter
+            if (currentLetterInd > wordlist[currentWordlistInd].length) { //if the current letter is extra
+                words[currentWordlistInd+1].removeChild(words[currentWordlistInd+1].lastChild); //remove it completely
             } else {
-                letters[currentLetterInd-1].removeAttribute('class');
+                letters[currentLetterInd-1].removeAttribute('class'); //remove the class
             }
 
-        } else if (typed.length > 0){
-            currentWord = typed[typed.length - 1];
-            caretPos -= (15 + Math.max(wordlist[currentWordlistInd-1].length-currentWord.length, 0) * 14.41);
-            count.innerHTML = `${currentWordlistInd-1}` +"/25";
-            typed.pop();
-            rows[rows.length-1].pop(); 
-        }
+        } else if (typed.length > 0){ //if there is currently nothing being typed
+            currentWord = typed[typed.length - 1]; //the current word is now the previous one (1/2)
+            typed.pop(); //(2/2)
+            if (rows[rows.length-1].length > 0) {
+                rows[rows.length-1].pop(); //remove one pointer from rows
+            } else {
+                rows.pop();
+                rows[rows.length-1].pop(); //remove one pointer from rows
+                console.log("YES");
+            }
+            }
     }
     if (e.key === " ") {
-        if (currentWord.length) {
-            caretPos += 15 + Math.max(wordlist[currentWordlistInd].length-currentWord.length, 0) * 14.41;
-            typed.push(currentWord);
-            currentWord = [];
-            count.innerHTML = `${currentWordlistInd+1}` +"/25";
-            rows[rows.length-1].push(currentWordlistInd)
+        if (currentLetterInd) { //if there is currently something being typed
+            typed.push(currentWord); //the current word moves to the typedlist and becomes a new empty (1/2)
+            currentWord = []; //(2/2)
+            rows[rows.length-1].push(currentWordlistInd) //adds one pointer to rows
         }
+
     } else if (e.key.length === 1) {
         if (interval === null) {
             start();
         }
         
         currentWord.push(`${e.key}`);
-        caretPos += 14.41;
         //writing out letters n stuff
         if (currentLetterInd >= wordlist[currentWordlistInd].length) {
             var singleLetter = document.createElement('letter');
@@ -96,7 +98,10 @@ function logKey(e) {
             letters[currentLetterInd].className = "incorrect"
         }
     }
-    caretShift(textbox.offsetWidth, currentWordlistInd);
+    
+    count.innerHTML = `${typed.length}` +"/25"; //update score
+    
+    caretShift(textbox.offsetWidth);
 
 
     document.getElementById("caret").style.transform = ("translate("+`${caretPos}`+ "px, "+`${caretPosLine}` * 36.2 + "px");
@@ -152,36 +157,63 @@ function getColorFromRoot(name) {
     return(getComputedStyle(document.querySelector(':root')).getPropertyValue(name));
 }
 
-function caretShift(textboxWidth, currentWordlistInd) {
-    console.log(rows)
+function caretShift(textboxWidth) {
     if (typed.length === 25) return
     let totalW = 0
     let letterW = 14.41
     let betweenW = 15
-    
-    if (caretPos < 0) {
-        caretPosLine -= 1;
-        console.log(typed)
-        for (let i = 0; i < rows[0].length; i++) {
-            totalW += Math.max(wordlist[rows[0][i]].length, typed[rows[0][i]].length) * letterW + betweenW;
-        }
-        rows.pop();
-        caretPos = totalW + (Math.max(currentWord.length, wordlist[typed.length].length) * letterW + betweenW);
-        return
-    }
+    let goingtopush = false
 
     for (let i = 0; i < rows[rows.length-1].length; i++) {
-        totalW += Math.max(wordlist[rows[rows.length-1][i]].length, typed[rows[rows.length-1][i]].length) * letterW + betweenW;
+        totalW += 
+        Math.max(
+            wordlist[rows[rows.length-1][i]].length, 
+            typed[rows[rows.length-1][i]].length
+            )
+         * letterW + betweenW;
     }
-    if (currentWord.length > wordlist[typed.length].length) {
-        if ((totalW + currentWord.length * letterW + betweenW) > textboxWidth) {
-            caretPos = letterW * currentWord.length
-            caretPosLine += 1
+    console.log("TOTALW" + totalW)
+    console.log(rows.length)
+    if (totalW) {
+        if (currentWord.length >= wordlist[typed.length].length) {
+            if ((totalW + currentWord.length * letterW + betweenW) > textboxWidth + 5) {
+                    rows.push([])
+                     totalW = 0
+                }
+        } else if ((totalW + wordlist[typed.length].length * letterW + betweenW) > textboxWidth+ 5){
             rows.push([])
+                totalW = 0
         }
-    } else if ((totalW + wordlist[typed.length].length * letterW + betweenW) > textboxWidth){
-        caretPos = 0;
-        caretPosLine += 1;
-        rows.push([])
-    }    
+    } else if (rows.length > 1 && currentWord.length >= wordlist[typed.length].length) { //if the current letter is extra
+        console.log("CHECK")
+
+        for (let i = 0; i < rows[rows.length-2].length; i++) {
+            totalW += 
+            Math.max(
+                wordlist[rows[rows.length-2][i]].length, 
+                typed[rows[rows.length-2][i]].length
+                )
+             * letterW + betweenW;
+        }
+
+        if ((totalW + currentWord.length * letterW + betweenW) < textboxWidth + 5){
+            console.log(totalW + wordlist.length * letterW + betweenW)
+            console.log("THIS ABOVE")
+            rows.pop()
+        } else {
+            totalW = 0
+            console.log("FAILED CHECK")
+        }
+    }
+
+    console.log("START")
+    console.log(rows)
+    console.log(typed)
+    console.log(wordlist)
+    console.log(currentWord)
+    totalW += letterW * currentWord.length
+
+    caretPos = totalW
+    
+    caretPosLine = rows.length - 1
 }
