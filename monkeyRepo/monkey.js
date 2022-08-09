@@ -1,4 +1,3 @@
-//why dont you update
 const textbox = document.getElementById('textbox');
 const count = document.getElementById('count');
 const timerDisplay = document.getElementById('timer');
@@ -16,12 +15,12 @@ function getRndInteger(min, max) {
 };
 
 async function fetchLibrary() {
-    const result = await fetch('https://gist.githubusercontent.com/deekayen/4148741/raw/98d35708fa344717d8eee15d11987de6c8e26d7d/1-1000.txt');
+    const result = await fetch('monkeytype/1-1000.txt');
     const data = await result.text();
     const wordLibrary = await data.split('\n');
     let wordlistasync = [];
     for (let i = 0; i < 25; i++) {
-        wordlistasync.push(wordLibrary[getRndInteger(0, wordLibrary.length-1)].split(''));
+        wordlistasync.push(wordLibrary[getRndInteger(0, wordLibrary.length-1)].trim().split(''));
     };
 
     wordlistasync.forEach((word) => {
@@ -144,7 +143,7 @@ function stop () {
     textbox.style.border = "3px solid"+ (getColorFromRoot('--yellow'));
     textbox.style.borderRadius = "15px";
     var wpm = document.createElement('div');
-    wpm.innerHTML = "WPM: " + `${(((document.getElementsByClassName("correct").length)/4.25)/(seconds/60)).toFixed(2)}`
+    wpm.innerHTML = "WPM: " + `${(((document.getElementsByClassName("correct").length)/4)/(seconds/60)).toFixed(2)}`
     wpm.className = "wpm"
     document.getElementById("border").appendChild(wpm);
     document.getElementById("count").remove();
