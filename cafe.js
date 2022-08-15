@@ -1,4 +1,5 @@
 import {Cats} from './catclass.js';
+import { displayTime } from './clock.js';
 
 var canvas = document.querySelector('canvas');
 var context = canvas.getContext('2d');
@@ -10,6 +11,7 @@ function getRndInteger(min, max) {
 var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 //=================================================
 
+setInterval(displayTime, 100);
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 let canvas_width = canvas.width;
@@ -25,7 +27,7 @@ addEventListener("resize", function() {
   canvas_width = canvas.width;
   canvas_height = canvas.height;
   for (let cat of catsList) {
-    cat.isFalling = true;
+    cat.action = "falling";
   }
 })
 //==============Screen/setup above=======
@@ -75,16 +77,13 @@ function animate() {
   requestAnimationFrame(animate);
   context.clearRect(0, 0, canvas_width, canvas_height);
   
-  
   for (let cat of catsList) {
-    let sprite = (cat.isFalling)? falling1:standing1;
-    if (cat.isPet == true) {sprite = pet1;}
-    context.drawImage(sprite, cat.x, cat.y, cat.width, cat.height);
-    if (cat != currentCat && cat.isFalling) {
+    context.drawImage(cat.sprite, cat.x, cat.y, cat.width, cat.height);
+    if (cat != currentCat && cat.action == "falling") {
       cat.fall();
     }
-    if (cat.isWalking == true) {
-      cat.walk();
+    if (cat.action == "walking" || cat.action == "standing") {
+      cat.idle();
     }
   }
 }
@@ -92,13 +91,5 @@ function animate() {
 for (let i = 0; i < 5; i++) {
   catsList.push(new Cats(getRndInteger(100, canvas_width-125), 100));
 }
-//sprites below
 
-
-let standing1 = new Image();
-standing1.src = "./sprites/standing1.png"
-let falling1 = new Image();
-falling1.src = "./sprites/falling1.png"
-let pet1 = new Image();
-pet1.src = "./sprites/pet1.png";
 animate();
