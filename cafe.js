@@ -19,13 +19,6 @@ let catsList = [];
 let currentCat = null;
 let cursorX;
 let cursorY;
-let cursorOut = false;
-addEventListener("mouseout", function() {
-  cursorOut = true;
-})
-addEventListener("mousein", function() {
-  cursorOut = false;
-})
 addEventListener("resize", function() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
@@ -60,7 +53,7 @@ addEventListener("mousemove", function(event) {
   let newCursorX = parseInt(event.pageX);
   let newCursorY = parseInt(event.pageY);
   //=========delta functions here==============
-  currentCat.drag(newCursorX - cursorX, newCursorY - cursorY);
+  currentCat.drag(newCursorX, newCursorY, cursorX, cursorY);
   cursorX = newCursorX;
   cursorY = newCursorY;
 });
@@ -78,9 +71,6 @@ let detectGrab = function(curX, curY) {
       currentCat = cat;
       currentCat.dy = 0;
       currentCat.dx = 0;
-      currentCat.isPet = true;
-      currentCat.isWalking = false;
-      setTimeout(currentCat.noPet, 3000);
     }
   }
 }

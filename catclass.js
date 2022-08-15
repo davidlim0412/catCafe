@@ -9,15 +9,10 @@ export class Cats {
       this.dx = 0;
       this.isWalking = false;
       this.isFalling = true;
-      this.isPet = false;
       this.bouncesLeft = 2;
       this.height = 100;
       this.width = 125;
       this.walkSpeed = (Math.random() < 0.5)? 2: -2;
-    }
-    noPet() {
-      this.isPet = false;
-      this.isWalking = true;
     }
     walk() {
       this.x += this.walkSpeed;
@@ -26,14 +21,13 @@ export class Cats {
       }
     }
   
-    drag(dx, dy) {
+    drag(newCursorX, newCursorY, cursorX, cursorY) {
       this.isFalling = true;
       this.isWalking = false;
-      this.isPet = false;
-      this.dy = dy * 0.2;
-      this.dx = dx * 0.2;
-      this.x = (cursorX < 0 || cursorX > canvas_width) ? clamp(cursorX, 0, canvas_width-this.width) : clamp(this.x + dx, 0, canvas_width - this.width);
-      this.y = (cursorY < 0 || cursorY > canvas_height) ? clamp(cursorY, 0, canvas_height-this.height) : clamp(this.y + dy, 0, canvas_height - this.height);
+      this.dy = (newCursorX - cursorX) * 0.2;
+      this.dx = (newCursorY - cursorY) * 0.2;
+      this.x = (cursorX < 0 || cursorX > canvas_width) ? clamp(cursorX, 0, canvas_width-this.width) : clamp(this.x + (newCursorX - cursorX), 0, canvas_width - this.width);
+      this.y = (cursorY < 0 || cursorY > canvas_height) ? clamp(cursorY, 0, canvas_height-this.height) : clamp(this.y + (newCursorY - cursorY), 0, canvas_height - this.height);
   
     }
     fall() {
