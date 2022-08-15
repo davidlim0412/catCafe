@@ -46,10 +46,6 @@ addEventListener("mousedown", function(event) {
 
 addEventListener("mousemove", function(event) {
   if (currentCat == null) {return;}
-  if (event.buttons !== 1) {
-    releaseCat();
-    return;
-  }
   let newCursorX = parseInt(event.pageX);
   let newCursorY = parseInt(event.pageY);
   //=========delta functions here==============

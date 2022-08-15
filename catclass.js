@@ -22,12 +22,15 @@ export class Cats {
     }
   
     drag(newCursorX, newCursorY, cursorX, cursorY) {
+      let dx = newCursorX - cursorX;
+      let dy = newCursorY - cursorY;
       this.isFalling = true;
       this.isWalking = false;
-      this.dy = (newCursorX - cursorX) * 0.2;
-      this.dx = (newCursorY - cursorY) * 0.2;
-      this.x = (cursorX < 0 || cursorX > canvas_width) ? clamp(cursorX, 0, canvas_width-this.width) : clamp(this.x + (newCursorX - cursorX), 0, canvas_width - this.width);
-      this.y = (cursorY < 0 || cursorY > canvas_height) ? clamp(cursorY, 0, canvas_height-this.height) : clamp(this.y + (newCursorY - cursorY), 0, canvas_height - this.height);
+      console.log(dy, dx);
+      this.dy = dy * 0.2;
+      this.dx = dx * 0.2;
+      this.x = (cursorX < 0 || cursorX > canvas_width) ? clamp(cursorX, 0, canvas_width-this.width) : clamp(this.x + dx, 0, canvas_width - this.width);
+      this.y = (cursorY < 0 || cursorY > canvas_height) ? clamp(cursorY, 0, canvas_height-this.height) : clamp(this.y + dy, 0, canvas_height - this.height);
   
     }
     fall() {
