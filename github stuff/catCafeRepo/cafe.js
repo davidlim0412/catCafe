@@ -111,7 +111,6 @@ for (let i = 0; i < 5; i++) {
 }
 //sprites below
 
-
 let standing1 = new Image();
 standing1.src = "sprites/standing1.png"
 let falling1 = new Image();
