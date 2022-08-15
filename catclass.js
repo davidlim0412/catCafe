@@ -1,4 +1,7 @@
-class Cats {
+import {canvas_height, canvas_width} from './cafe.js';
+const clamp = (num, min, max) => Math.min(Math.max(num, min), max)
+
+export class Cats {
     constructor(x, y) {
       this.x = x;
       this.y = y;
@@ -38,6 +41,7 @@ class Cats {
         this.dy = -this.dy * 0.5;
         this.y = 0;
       }
+
       this.dy += 0.4;
       if (this.x < 0 || this.x + this.width > canvas_width) { //check sides
         this.x = (this.x < 0)? 0: canvas_width-this.width;

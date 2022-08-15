@@ -4,7 +4,6 @@ var canvas = document.querySelector('canvas');
 var context = canvas.getContext('2d');
 
 //useful functions
-const clamp = (num, min, max) => Math.min(Math.max(num, min), max)
 function getRndInteger(min, max) {
   return Math.floor(Math.random() * (max - min) ) + min;
 }
@@ -15,13 +14,11 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 let canvas_width = canvas.width;
 let canvas_height = canvas.height;
-
+export {canvas_width, canvas_height};
 let catsList = [];
 let currentCat = null;
 let cursorX;
 let cursorY;
-let cursor_dx;
-let cursor_dy;
 let cursorOut = false;
 addEventListener("mouseout", function() {
   cursorOut = true;
