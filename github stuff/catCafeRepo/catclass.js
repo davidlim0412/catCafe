@@ -57,4 +57,4 @@ class Cats {
       this.y += this.dy;
       this.x += this.dx;
     }
-  }
+}
