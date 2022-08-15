@@ -1,4 +1,4 @@
-import {Cats} from '/catclass.js';
+import {Cats} from './catclass.js';
 
 var canvas = document.querySelector('canvas');
 var context = canvas.getContext('2d');
@@ -113,9 +113,9 @@ for (let i = 0; i < 5; i++) {
 
 
 let standing1 = new Image();
-standing1.src = "/sprites/standing1.png"
+standing1.src = "./sprites/standing1.png"
 let falling1 = new Image();
-falling1.src = "/sprites/falling1.png"
+falling1.src = "./sprites/falling1.png"
 let pet1 = new Image();
-pet1.src = "/sprites/pet1.png";
+pet1.src = "./sprites/pet1.png";
 animate();
