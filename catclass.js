@@ -19,7 +19,7 @@ export class Cats {
       this.width = 125;
     }
     idle() {
-      if (getRndInteger(0, 200) == 0) {
+      if (getRndInteger(0, 300) == 0) {
         if (this.action == "standing") {
           this.action = "walking";
           this.facingRight = (Math.random() < 0.5);
@@ -29,11 +29,12 @@ export class Cats {
         }
       }
       if (this.action == "walking") {
-        if (this.x < 0|| this.x + this.width > canvas_width) {
+        this.x +=(this.facingRight)? 3 : -3;
+        if (this.x <= 0|| this.x + this.width >= canvas_width) {
           this.facingRight = (!this.facingRight)
           this.sprite = (this.facingRight)? standing1: standing1flipped;
+          this.x = clamp(this.x, 0, canvas_width+ this.width);
         }
-        this.x +=(this.facingRight)? 3 : -3;
       }
     }
   
