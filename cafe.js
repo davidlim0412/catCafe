@@ -69,6 +69,7 @@ let detectGrab = function(curX, curY) {
       currentCat = cat;
       currentCat.dy = 0;
       currentCat.dx = 0;
+      return;
     }
   }
 }
@@ -89,7 +90,7 @@ function animate() {
 }
 
 for (let i = 0; i < 5; i++) {
-  catsList.push(new Cats(getRndInteger(100, canvas_width-125), 100));
+  catsList.push(new Cats(getRndInteger(0, canvas_width-125), 100));
 }
 
 animate();
